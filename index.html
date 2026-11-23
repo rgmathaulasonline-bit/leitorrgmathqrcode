@@ -13,7 +13,10 @@ input,select{font:inherit;font-size:14px;background:var(--bg2);border:1px solid 
 input:focus,select:focus{border-color:var(--p)}label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:600}
 header{background:linear-gradient(135deg,#0F2B5C,#1E4A8A,#2D6FC4);padding:18px;text-align:center;box-shadow:0 4px 25px rgba(21,56,128,.5)}
 header h1{color:#FFE484;font-size:1.7rem;letter-spacing:1px}header p{color:#cfe0ff;font-size:.9rem;margin-top:4px}
-nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:14px;background:var(--bg2);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:50}
+/* Abas como botões/ícones na tela */
+nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;max-width:1100px;margin:0 auto;padding:16px 16px 0}
+nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:78px;padding:12px 6px;font-size:13px;line-height:1.15;border-radius:14px;text-align:center}
+nav button svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button.on{background:rgba(79,124,255,.25);border-color:var(--p)}
 main{max-width:1100px;margin:0 auto;padding:20px 16px 40px}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 8px 28px rgba(0,0,0,.3)}
@@ -22,6 +25,11 @@ main{max-width:1100px;margin:0 auto;padding:20px 16px 40px}
 .types{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
 .type{padding:18px 8px;text-align:center;font-size:22px;font-weight:800;border-radius:14px}.type small{display:block;font-size:12px;color:var(--muted);font-weight:600}
 .type.on{border-color:var(--p);background:rgba(79,124,255,.25)}
+/* Botões de escolha (série, turma, disciplina, bimestre) */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-width:58px;min-height:44px;padding:10px 14px;font-size:15px;border-radius:12px}
+.chip.on{border-color:var(--p);background:rgba(79,124,255,.35);color:#fff}
+.sel{margin-bottom:14px}
 .aviso{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.4);border-radius:12px;padding:12px 14px;font-size:13px;color:#fbbf24;margin-bottom:16px;line-height:1.5}
 .cam{position:relative;background:#000;border-radius:14px;overflow:hidden;max-width:520px;margin:14px auto 0}.cam video{width:100%;display:block}
 .cam i{position:absolute;inset:18%;border:3px dashed rgba(79,124,255,.8);border-radius:14px}
@@ -42,7 +50,12 @@ footer a{display:inline-block;margin-top:12px;background:linear-gradient(135deg,
 .sheet{margin:0;width:210mm;height:297mm;page-break-after:always;break-after:page}}
 </style></head><body>
 <header><h1>✔ Visto Virtual</h1><p>Professor Raylton Guedes · RG Math</p></header>
-<nav id="nav"><button data-v="gerar" class="on">🖨️ Gerar QR Codes</button><button data-v="reg">📷 Registrar Pontos</button><button data-v="pts">📊 Pontuação</button><button data-v="bkp">💾 Backup</button></nav>
+<nav id="nav">
+<button data-v="gerar" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg><span>Gerar QR Codes</span></button>
+<button data-v="reg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L16 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Registrar Pontos</span></button>
+<button data-v="pts"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Pontuação</span></button>
+<button data-v="bkp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5zM8 3v5h7V3M8 21v-7h8v7"/></svg><span>Backup</span></button>
+</nav>
 <main>
 <div class="aviso"><b>⚠️ Dados 100% locais.</b> Tudo fica salvo apenas neste navegador/dispositivo. Ao terminar, vá em <b>Backup</b> e clique em <b>Exportar Backup</b>. Limpar os dados do navegador sem backup apaga tudo.</div>
 
@@ -53,8 +66,13 @@ footer a{display:inline-block;margin-top:12px;background:linear-gradient(135deg,
 <div id="sheets"></div></section>
 
 <section class="view" id="v-reg"><div class="card"><h2>2. Dados do registro</h2>
-<div class="row"><div><label>Turma</label><input id="fTurma" list="lT" placeholder="Ex.: 9º A"></div><div><label>Disciplina</label><input id="fDisc" list="lD" placeholder="Ex.: Matemática"></div><div><label>Data</label><input id="fData" type="date"></div><div><label>Bimestre</label><select id="fBim"><option value="1">1º</option><option value="2">2º</option><option value="3">3º</option><option value="4">4º</option></select></div><div><label>Aluno(a)</label><input id="fAluno" list="lA" placeholder="Nome do aluno"></div></div>
-<datalist id="lT"></datalist><datalist id="lD"></datalist><datalist id="lA"></datalist>
+<div class="sel"><label>Ano / série</label><div class="chips" data-g="serie"><button class="chip" data-val="6º">6º</button><button class="chip" data-val="7º">7º</button><button class="chip" data-val="8º">8º</button><button class="chip" data-val="9º">9º</button><button class="chip" data-val="1º">1º</button><button class="chip" data-val="2º">2º</button><button class="chip" data-val="3º">3º</button></div></div>
+<div class="sel"><label>Turma</label><div class="chips" data-g="letra"><button class="chip" data-val="A">A</button><button class="chip" data-val="B">B</button><button class="chip" data-val="C">C</button><button class="chip" data-val="D">D</button><button class="chip" data-val="E">E</button><button class="chip" data-val="F">F</button></div></div>
+<div class="sel"><label>Disciplina</label><div class="chips" data-g="disc"><button class="chip" data-val="Matemática">Matemática</button><button class="chip" data-val="Estudo Orientado">Estudo Orientado</button><button class="chip" data-val="Pensamento Científico">Pensamento Científico</button><button class="chip" data-val="Prática Experimental">Prática Experimental</button></div></div>
+<div class="sel"><label>Bimestre</label><div class="chips" data-g="bim"><button class="chip on" data-val="1">1ºB</button><button class="chip" data-val="2">2ºB</button><button class="chip" data-val="3">3ºB</button><button class="chip" data-val="4">4ºB</button></div></div>
+<input type="hidden" id="fTurma"><input type="hidden" id="fDisc"><input type="hidden" id="fBim" value="1">
+<div class="row"><div><label>Data</label><input id="fData" type="date"></div><div><label>Aluno(a)</label><input id="fAluno" list="lA" placeholder="Nome do aluno"></div></div>
+<datalist id="lA"></datalist>
 <div class="acts"><button class="pri" onclick="App.cam()">📷 Abrir câmera e ler QR</button><button onclick="$('fImg').click()">🖼️ Foto do QR</button><button onclick="App.parar()">Fechar câmera</button><input type="file" id="fImg" accept="image/*" style="display:none" onchange="App.foto(event)"></div>
 <div class="hint" style="color:var(--muted);font-size:12.5px;margin-top:10px">A câmera exige HTTPS ou localhost. Se não abrir, use "Foto do QR". Cada QR Code só vale uma vez.</div>
 <div id="camA"></div><div class="last" id="last">Aguardando leitura…</div></div></section>
@@ -82,7 +100,7 @@ const App={pt:1,stream:null,last:'',lt:0,
 go(v){document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));if(v!=='reg')this.parar();if(v==='reg')this.sug();if(v==='pts')this.pontos()},
 gerar(){const n=Math.max(1,Math.min(30,+$('nF').value||1)),hue=hueDe(this.pt),col=`hsl(${hue},75%,18%)`;let h='';for(let f=0;f<n;f++){h+=`<div class="sheet" style="--h:${hue}">`;for(let i=0;i<30;i++){const id=uid()+i;h+=`<div class="cell">${qrSvg('VV|'+this.pt+'|'+id,col)}Visto ${fp(this.pt)} pts<small>Folha ${f+1} · ${id.slice(-6)}</small></div>`}h+='</div>'}$('sheets').innerHTML=h;toast(n+' folha(s) gerada(s)','success')},
 imprimir(){if(!$('sheets').children.length)this.gerar();setTimeout(()=>window.print(),150)},
-sug(){const f=k=>[...new Set(DB.d.regs.map(r=>r[k]))].map(v=>`<option value="${esc(v)}">`).join('');$('lT').innerHTML=f('turma');$('lD').innerHTML=f('disc');$('lA').innerHTML=f('aluno')},
+sug(){$('lA').innerHTML=[...new Set(DB.d.regs.map(r=>r.aluno))].map(v=>`<option value="${esc(v)}">`).join('')},
 async cam(){this.parar();if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return toast('Sem suporte a câmera. Use "Foto do QR".','error');if(!window.isSecureContext)return toast('A câmera exige HTTPS ou localhost.','error');
 try{this.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}}})}catch(e){return toast(e.name==='NotAllowedError'?'Permissão de câmera negada.':'Câmera indisponível. Use "Foto do QR".','error')}
 $('camA').innerHTML='<div class="cam"><video id="vid" autoplay playsinline muted></video><i></i></div>';const v=$('vid');v.srcObject=this.stream;$('last').textContent='Procurando QR Code… aproxime e mantenha firme.';
@@ -96,7 +114,7 @@ parar(){this.stream&&this.stream.getTracks().forEach(t=>t.stop());this.stream=nu
 async foto(ev){const f=ev.target.files[0];ev.target.value='';if(!f)return;const b=await createImageBitmap(f),c=document.createElement('canvas');c.width=b.width;c.height=b.height;const x=c.getContext('2d');x.drawImage(b,0,0);const r=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height);r?this.lido(r.data,1):toast('Nenhum QR Code encontrado na foto.','error')},
 lido(t,force){const now=Date.now();if(!force&&t===this.last&&now-this.lt<3000)return;this.last=t;this.lt=now;
 const g=k=>$(k).value.trim(),F={turma:g('fTurma'),disc:g('fDisc'),data:g('fData'),bim:+$('fBim').value,aluno:g('fAluno')};
-if(!F.turma||!F.disc||!F.data||!F.aluno){$('last').innerHTML='⚠️ QR lido, mas faltam dados: preencha turma, disciplina, data e aluno.';this.last='';return toast('Preencha turma, disciplina, data e aluno.','warn')}
+if(!F.turma||!F.disc||!F.data||!F.aluno){$('last').innerHTML='⚠️ QR lido, mas faltam dados: escolha série, turma e disciplina, e preencha data e aluno.';this.last='';return toast('Escolha série, turma e disciplina, e preencha data e aluno.','warn')}
 const p=t.split('|'),pts=parseFloat(p[1]);if(p[0]!=='VV'||![1,2.5,5].includes(pts)||!p[2])return toast('QR Code inválido (não é um Visto Virtual).','error');
 if(DB.d.regs.some(r=>r.qid===p[2])){$('last').innerHTML='⚠️ Este QR Code já foi usado.';return toast('QR Code já utilizado!','warn')}
 DB.d.regs.push({id:uid(),qid:p[2],pts,...F,ts:Date.now()});DB.save();if(navigator.vibrate)navigator.vibrate(120);
@@ -116,5 +134,12 @@ zerar(){if(confirm('Apagar TODOS os dados? Não pode ser desfeito.')){DB.d={regs
 window.addEventListener('DOMContentLoaded',()=>{DB.load();$('fData').value=new Date().toISOString().slice(0,10);
 $('nav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)App.go(b.dataset.v)});
 $('types').addEventListener('click',e=>{const b=e.target.closest('.type');if(!b)return;App.pt=+b.dataset.p;document.querySelectorAll('.type').forEach(x=>x.classList.toggle('on',x===b))});
+/* Botões de escolha: série + turma formam o nome da turma (ex.: "9º A"); disciplina e bimestre vão para os campos ocultos */
+const Sel={serie:'',letra:''};
+document.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;const grp=b.parentNode,g=grp.dataset.g;
+grp.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));
+if(g==='serie'||g==='letra'){Sel[g]=b.dataset.val;$('fTurma').value=Sel.serie&&Sel.letra?Sel.serie+' '+Sel.letra:''}
+else if(g==='disc')$('fDisc').value=b.dataset.val;
+else if(g==='bim')$('fBim').value=b.dataset.val});
 document.querySelector('.type').classList.add('on')});
 </script></body></html>
