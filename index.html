@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Visto Virtual</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<style>
+:root{--bg:#0f1424;--bg2:#151b30;--card:#1b2340;--card2:#232c4d;--p:#4f7cff;--p2:#7b5cff;--text:#e8ecff;--muted:#9aa5cc;--bd:#2a3357;--ok:#22c55e;--warn:#f59e0b;--err:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,var(--bg),#0a0f1e);color:var(--text);min-height:100vh}
+button{font:inherit;font-size:14px;font-weight:600;cursor:pointer;border:0;border-radius:10px;padding:10px 16px;color:var(--text);background:var(--card2);border:1px solid var(--bd)}
+button:hover{filter:brightness(1.15)}.pri{background:linear-gradient(135deg,var(--p),var(--p2));border:0;color:#fff}.dg{background:var(--err);border:0;color:#fff}.sm{padding:5px 10px;font-size:12px}
+input,select{font:inherit;font-size:14px;background:var(--bg2);border:1px solid var(--bd);color:var(--text);border-radius:10px;padding:10px 12px;width:100%;outline:none}
+input:focus,select:focus{border-color:var(--p)}label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:600}
+header{background:linear-gradient(135deg,#0F2B5C,#1E4A8A,#2D6FC4);padding:18px;text-align:center;box-shadow:0 4px 25px rgba(21,56,128,.5)}
+header h1{color:#FFE484;font-size:1.7rem;letter-spacing:1px}header p{color:#cfe0ff;font-size:.9rem;margin-top:4px}
+nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:14px;background:var(--bg2);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:50}
+nav button.on{background:rgba(79,124,255,.25);border-color:var(--p)}
+main{max-width:1100px;margin:0 auto;padding:20px 16px 40px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 8px 28px rgba(0,0,0,.3)}
+.card h2{font-size:17px;margin-bottom:14px}.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:14px}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}.view{display:none}.view.on{display:block}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.type{padding:18px 8px;text-align:center;font-size:22px;font-weight:800;border-radius:14px}.type small{display:block;font-size:12px;color:var(--muted);font-weight:600}
+.type.on{border-color:var(--p);background:rgba(79,124,255,.25)}
+.aviso{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.4);border-radius:12px;padding:12px 14px;font-size:13px;color:#fbbf24;margin-bottom:16px;line-height:1.5}
+.cam{position:relative;background:#000;border-radius:14px;overflow:hidden;max-width:520px;margin:14px auto 0}.cam video{width:100%;display:block}
+.cam i{position:absolute;inset:18%;border:3px dashed rgba(79,124,255,.8);border-radius:14px}
+.last{margin-top:12px;padding:12px;border-radius:12px;background:var(--card2);text-align:center;font-weight:700}
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:12px}table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--bd)}th{background:var(--bg2);color:var(--muted);font-size:12px}
+.b{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(34,197,94,.15);color:var(--ok)}
+.empty{text-align:center;padding:30px;color:var(--muted)}
+/* Cada folha recebe uma cor própria através da variável --h (matiz) */
+.sheet{--h:210;background:hsl(var(--h),80%,95%);color:hsl(var(--h),65%,20%);width:210mm;height:297mm;max-width:100%;margin:0 auto 16px;padding:10mm;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);gap:2mm;overflow:hidden;border-top:3mm solid hsl(var(--h),70%,45%);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.cell{background:hsl(var(--h),85%,88%);border:.4mm dashed hsl(var(--h),60%,40%);border-radius:2mm;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 3.4mm Arial,sans-serif;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.cell svg{width:26mm;height:26mm;border-radius:1mm}.cell small{font-weight:400;font-size:2.2mm;color:hsl(var(--h),45%,30%)}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--card2);border:1px solid var(--bd);border-left:4px solid var(--p);border-radius:12px;padding:12px 18px;font-weight:600;z-index:99;transition:.3s;max-width:90%}
+#toast.show{transform:translateX(-50%)}#toast.success{border-left-color:var(--ok)}#toast.error{border-left-color:var(--err)}#toast.warn{border-left-color:var(--warn)}
+footer{background:linear-gradient(135deg,#0F2B5C,#1E4A8A,#2D6FC4);border-top:4px solid #F7C948;padding:24px 16px;text-align:center;color:#FFE484;font-weight:600}
+footer a{display:inline-block;margin-top:12px;background:linear-gradient(135deg,#F58529,#DD2A7B,#8134AF);color:#fff;padding:12px 26px;border-radius:60px;text-decoration:none;font-weight:700}
+@media(max-width:600px){header h1{font-size:1.3rem}.type{font-size:18px}}
+@media print{@page{size:A4;margin:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}body{background:#fff}body *{visibility:hidden}#sheets,#sheets *{visibility:visible}#sheets{position:absolute;left:0;top:0;width:210mm}
+.sheet{margin:0;width:210mm;height:297mm;page-break-after:always;break-after:page}}
+</style></head><body>
+<header><h1>✔ Visto Virtual</h1><p>Professor Raylton Guedes · RG Math</p></header>
+<nav id="nav"><button data-v="gerar" class="on">🖨️ Gerar QR Codes</button><button data-v="reg">📷 Registrar Pontos</button><button data-v="pts">📊 Pontuação</button><button data-v="bkp">💾 Backup</button></nav>
+<main>
+<div class="aviso"><b>⚠️ Dados 100% locais.</b> Tudo fica salvo apenas neste navegador/dispositivo. Ao terminar, vá em <b>Backup</b> e clique em <b>Exportar Backup</b>. Limpar os dados do navegador sem backup apaga tudo.</div>
+
+<section class="view on" id="v-gerar"><div class="card"><h2>1. Escolha o valor do visto</h2>
+<div class="types" id="types"><button class="type" data-p="1">1,0<small>ponto</small></button><button class="type" data-p="2.5">2,5<small>pontos</small></button><button class="type" data-p="5">5,0<small>pontos</small></button></div>
+<div class="row"><div><label>Folhas A4 (30 QR Codes por folha — 1,0 azul · 2,5 verde · 5,0 rosa)</label><input id="nF" type="number" min="1" max="30" value="1"></div></div>
+<div class="acts"><button class="pri" onclick="App.gerar()">Gerar folhas</button><button onclick="App.imprimir()">🖨️ Imprimir</button></div>
+<div class="hint" style="color:var(--muted);font-size:12.5px;margin-top:10px">Na hora de imprimir, marque a opção <b>“Gráficos de plano de fundo”</b> (Chrome/Edge) para as cores saírem no papel.</div></div>
+<div id="sheets"></div></section>
+
+<section class="view" id="v-reg"><div class="card"><h2>2. Dados do registro</h2>
+<div class="row"><div><label>Turma</label><input id="fTurma" list="lT" placeholder="Ex.: 9º A"></div><div><label>Disciplina</label><input id="fDisc" list="lD" placeholder="Ex.: Matemática"></div><div><label>Data</label><input id="fData" type="date"></div><div><label>Bimestre</label><select id="fBim"><option value="1">1º</option><option value="2">2º</option><option value="3">3º</option><option value="4">4º</option></select></div><div><label>Aluno(a)</label><input id="fAluno" list="lA" placeholder="Nome do aluno"></div></div>
+<datalist id="lT"></datalist><datalist id="lD"></datalist><datalist id="lA"></datalist>
+<div class="acts"><button class="pri" onclick="App.cam()">📷 Abrir câmera e ler QR</button><button onclick="$('fImg').click()">🖼️ Foto do QR</button><button onclick="App.parar()">Fechar câmera</button><input type="file" id="fImg" accept="image/*" style="display:none" onchange="App.foto(event)"></div>
+<div class="hint" style="color:var(--muted);font-size:12.5px;margin-top:10px">A câmera exige HTTPS ou localhost. Se não abrir, use "Foto do QR". Cada QR Code só vale uma vez.</div>
+<div id="camA"></div><div class="last" id="last">Aguardando leitura…</div></div></section>
+
+<section class="view" id="v-pts"><div class="card"><h2>Pontuação por aluno</h2>
+<div class="row"><div><label>Bimestre</label><select id="pB" onchange="App.pontos()"></select></div><div><label>Turma</label><select id="pT" onchange="App.pontos()"></select></div></div>
+<div id="resumo"></div><div class="acts"><button onclick="App.csv()">📄 Exportar CSV</button></div></div>
+<div class="card"><h2>Registros individuais</h2><div id="lista"></div></div></section>
+
+<section class="view" id="v-bkp"><div class="card"><h2>Backup e restauração</h2><p style="color:var(--muted);font-size:13.5px">Exporte todos os registros em JSON ou restaure um backup (em outro celular/computador).</p>
+<div class="acts"><button class="pri" onclick="App.bkp()">💾 Exportar Backup</button><button onclick="$('fBk').click()">📥 Importar Backup</button><input type="file" id="fBk" accept="application/json" style="display:none" onchange="App.imp(event)"></div></div>
+<div class="card"><h2>Zona de perigo</h2><button class="dg" onclick="App.zerar()">🗑️ Apagar todos os dados</button></div></section>
+</main>
+<footer>© 2025 RG Math - Professor Raylton Guedes<br><a href="https://www.instagram.com/rgmath_education/" target="_blank" rel="noopener">📷 Acompanhe o RG Math @rgmath_education</a></footer>
+<div id="toast"></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id),KEY='visto_virtual_v1',esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7),fp=n=>Number(n).toFixed(1).replace('.',',');
+const DB={d:{regs:[]},load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.regs))this.d=s}catch(e){}},save(){try{localStorage.setItem(KEY,JSON.stringify(this.d))}catch(e){toast('Não foi possível salvar. Exporte um backup.','warn')}}};
+let tt;function toast(m,t=''){const e=$('toast');e.textContent=m;e.className='show '+t;clearTimeout(tt);tt=setTimeout(()=>e.className='',3200)}
+/* QR com módulos coloridos escuros sobre fundo branco (mantém o contraste para a leitura) */
+function qrSvg(t,col='#000'){const q=qrcode(0,'M');q.addData(t);q.make();const n=q.getModuleCount();let p='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))p+=`M${c},${r}h1v1h-1z`;return`<svg viewBox="-2 -2 ${n+4} ${n+4}" shape-rendering="crispEdges"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path fill="${col}" d="${p}"/></svg>`}
+/* Cor por valor do visto: 1,0 = azul · 2,5 = verde · 5,0 = rosa */
+const HUES={1:215,2.5:135,5:330};
+const hueDe=p=>HUES[p]??215;
+const App={pt:1,stream:null,last:'',lt:0,
+go(v){document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));if(v!=='reg')this.parar();if(v==='reg')this.sug();if(v==='pts')this.pontos()},
+gerar(){const n=Math.max(1,Math.min(30,+$('nF').value||1));let h='';for(let f=0;f<n;f++){const hue=hueDe(this.pt),col=`hsl(${hue},75%,22%)`;h+=`<div class="sheet" style="--h:${hue}">`;for(let i=0;i<30;i++){const id=uid()+i;h+=`<div class="cell">${qrSvg('VV|'+this.pt+'|'+id,col)}Visto ${fp(this.pt)} pts<small>Folha ${f+1} · ${id.slice(-6)}</small></div>`}h+='</div>'}$('sheets').innerHTML=h;toast(n+' folha(s) gerada(s)','success')},
+imprimir(){if(!$('sheets').children.length)this.gerar();setTimeout(()=>window.print(),150)},
+sug(){const f=k=>[...new Set(DB.d.regs.map(r=>r[k]))].map(v=>`<option value="${esc(v)}">`).join('');$('lT').innerHTML=f('turma');$('lD').innerHTML=f('disc');$('lA').innerHTML=f('aluno')},
+async cam(){this.parar();if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return toast('Sem suporte a câmera. Use "Foto do QR".','error');if(!window.isSecureContext)return toast('A câmera exige HTTPS ou localhost.','error');
+try{this.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}})}catch(e){return toast(e.name==='NotAllowedError'?'Permissão de câmera negada.':'Câmera indisponível. Use "Foto do QR".','error')}
+$('camA').innerHTML='<div class="cam"><video id="vid" autoplay playsinline muted></video><i></i></div>';const v=$('vid');v.srcObject=this.stream;const c=document.createElement('canvas'),x=c.getContext('2d',{willReadFrequently:true});
+const loop=()=>{if(!this.stream)return;if(v.videoWidth){const s=Math.min(1,640/v.videoWidth);c.width=v.videoWidth*s;c.height=v.videoHeight*s;x.drawImage(v,0,0,c.width,c.height);const r=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height);if(r&&r.data)this.lido(r.data)}requestAnimationFrame(loop)};loop()},
+parar(){this.stream&&this.stream.getTracks().forEach(t=>t.stop());this.stream=null;$('camA').innerHTML=''},
+async foto(ev){const f=ev.target.files[0];ev.target.value='';if(!f)return;const b=await createImageBitmap(f),c=document.createElement('canvas');c.width=b.width;c.height=b.height;const x=c.getContext('2d');x.drawImage(b,0,0);const r=jsQR(x.getImageData(0,0,c.width,c.height).data,c.width,c.height);r?this.lido(r.data,1):toast('Nenhum QR Code encontrado na foto.','error')},
+lido(t,force){const now=Date.now();if(!force&&t===this.last&&now-this.lt<3000)return;this.last=t;this.lt=now;
+const g=k=>$(k).value.trim(),F={turma:g('fTurma'),disc:g('fDisc'),data:g('fData'),bim:+$('fBim').value,aluno:g('fAluno')};
+if(!F.turma||!F.disc||!F.data||!F.aluno)return toast('Preencha turma, disciplina, data e aluno.','warn');
+const p=t.split('|'),pts=parseFloat(p[1]);if(p[0]!=='VV'||![1,2.5,5].includes(pts)||!p[2])return toast('QR Code inválido (não é um Visto Virtual).','error');
+if(DB.d.regs.some(r=>r.qid===p[2])){$('last').innerHTML='⚠️ Este QR Code já foi usado.';return toast('QR Code já utilizado!','warn')}
+DB.d.regs.push({id:uid(),qid:p[2],pts,...F,ts:Date.now()});DB.save();if(navigator.vibrate)navigator.vibrate(120);
+$('last').innerHTML=`✅ +${fp(pts)} ponto(s) para <b>${esc(F.aluno)}</b>`;toast('Ponto registrado!','success');this.sug()},
+pontos(){const R=DB.d.regs,sb=$('pB'),st=$('pT'),vb=sb.value,vt=st.value;
+sb.innerHTML='<option value="">Todos</option>'+[1,2,3,4].map(b=>`<option value="${b}">${b}º</option>`).join('');st.innerHTML='<option value="">Todas</option>'+[...new Set(R.map(r=>r.turma))].map(t=>`<option>${esc(t)}</option>`).join('');sb.value=vb;st.value=vt;
+const L=R.filter(r=>(!sb.value||r.bim==sb.value)&&(!st.value||r.turma===st.value)),G={};
+L.forEach(r=>{const k=[r.aluno,r.turma,r.disc,r.bim].join('|');(G[k]=G[k]||{...r,tot:0,n:0}).tot+=r.pts;G[k].n++});this.G=Object.values(G).sort((a,b)=>a.aluno.localeCompare(b.aluno));
+$('resumo').innerHTML=this.G.length?`<div class="tw"><table><thead><tr><th>Aluno</th><th>Turma</th><th>Disciplina</th><th>Bim.</th><th>Vistos</th><th>Total</th></tr></thead><tbody>${this.G.map(g=>`<tr><td><b>${esc(g.aluno)}</b></td><td>${esc(g.turma)}</td><td>${esc(g.disc)}</td><td>${g.bim}º</td><td>${g.n}</td><td><span class="b">${fp(g.tot)}</span></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Nenhum ponto registrado.</div>';
+$('lista').innerHTML=L.length?`<div class="tw"><table><thead><tr><th>Data</th><th>Aluno</th><th>Turma</th><th>Disciplina</th><th>Pts</th><th></th></tr></thead><tbody>${L.slice().reverse().map(r=>`<tr><td>${new Date(r.data+'T12:00').toLocaleDateString('pt-BR')}</td><td>${esc(r.aluno)}</td><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${fp(r.pts)}</td><td><button class="dg sm" onclick="App.del('${r.id}')">🗑️</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Sem registros.</div>'},
+del(id){if(!confirm('Excluir este registro?'))return;DB.d.regs=DB.d.regs.filter(r=>r.id!==id);DB.save();this.pontos()},
+dl(n,d,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([d],{type:t}));a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},
+csv(){if(!this.G||!this.G.length)return toast('Sem dados','warn');const c=['Aluno;Turma;Disciplina;Bimestre;Vistos;Total'].concat(this.G.map(g=>[g.aluno,g.turma,g.disc,g.bim,g.n,fp(g.tot)].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')));this.dl('visto-virtual.csv','\ufeff'+c.join('\n'),'text/csv;charset=utf-8')},
+bkp(){this.dl('visto-virtual-backup-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(DB.d),'application/json')},
+imp(ev){const f=ev.target.files[0];ev.target.value='';if(!f)return;const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(!Array.isArray(d.regs))throw 0;if(confirm('Substituir todos os dados atuais pelo backup?')){DB.d=d;DB.save();toast('Backup restaurado','success')}}catch(e){toast('Arquivo de backup inválido','error')}};fr.readAsText(f)},
+zerar(){if(confirm('Apagar TODOS os dados? Não pode ser desfeito.')){DB.d={regs:[]};DB.save();toast('Dados apagados','success')}}};
+window.addEventListener('DOMContentLoaded',()=>{DB.load();$('fData').value=new Date().toISOString().slice(0,10);
+$('nav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)App.go(b.dataset.v)});
+$('types').addEventListener('click',e=>{const b=e.target.closest('.type');if(!b)return;App.pt=+b.dataset.p;document.querySelectorAll('.type').forEach(x=>x.classList.toggle('on',x===b))});
+document.querySelector('.type').classList.add('on')});
+</script></body></html>
